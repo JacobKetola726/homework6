@@ -22,9 +22,9 @@ h1 {
     color: #333;
 }
 
-#user-card p {
+/*#user-card p {
     margin: 0.5rem 0;
-}
+}*/
 
 .button-group {
     display: flex;

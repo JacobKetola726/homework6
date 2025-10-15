@@ -1,44 +1,82 @@
-const getBtn = document.getElementById("getBtn");
-const apiData = document.getElementById("apiData");
-const apiform = document.getElementById("apiForm");
-const url = "https://randomuser.me/api/";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Listing</title>
+</head>
+<body>
+    <h1>Just Added</h1>
 
-getBtn.addEventListener("click", getUser);
+    <?php
+    // Enable error reporting
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
 
-function getUser(){
-    fetch(url)
-    .then(decodeData)
-    .then(success, fail);
-}
+    // See the contents of $_POST, submitted from index.html
+    var_dump($_POST);
 
-function decodeData(response){
-    if(response.ok){
-        apiData.innerHTML = "Response is " + response.status + " (OK)";
-        return response.json();
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $firstname = htmlspecialchars($_POST['first']);
+        $lastname  = htmlspecialchars($_POST['last']);
+        $country   = htmlspecialchars($_POST['country']);
+
+        echo "<p>Adding <strong>$firstname $lastname</strong> from $country.</p>";
+
+        // Database credentials
+        $servername = "localhost";
+        $username = "user36";
+        $password = "36oxon";
+        $dbname = "db36";
+
+        try {
+            // Create PDO connection
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Insert record
+            $stmt = $conn->prepare("INSERT INTO randuser (first, last, country) VALUES (:firstname, :lastname, :country)");
+            $stmt->bindParam(':firstname', $firstname);
+            $stmt->bindParam(':lastname', $lastname);
+            $stmt->bindParam(':country', $country);
+
+            echo "<div>";
+            if ($stmt->execute()) {
+                echo "<p>✅ New record created successfully</p>";
+            } else {
+                echo "<p>❌ Error: Unable to create a new record.</p>";
+            }
+            echo "</div>";
+
+            // Retrieve all users
+            $sql = "SELECT first, last, country FROM randuser";
+            $result = $conn->query($sql);
+
+            echo "<div>";
+            echo "<table border='1' cellpadding='8'>";
+            echo "<thead><tr><th>First Name</th><th>Last Name</th><th>Country</th></tr></thead><tbody>";
+
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($row['first']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['last']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['country']) . "</td>";
+                echo "</tr>";
+            }
+
+            echo "</tbody></table>";
+            echo "</div>";
+
+        } catch (PDOException $e) {
+            echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
+        }
+
+        $conn = null;
+
     } else {
-        throw response.status;
+        echo "<p>No data was submitted.</p>";
     }
-}
-
-function success(userData){
-    const user = userData.results[0];
-
-    apiData.innerHTML = `
-    <img class="user" src="${user.picture.large}" alt="random user"/>
-    <h2 class="user"> Meet ${user.name.first} ${user.name.last}</h2>
-    <p>Country: ${user.location.country}</p>
-    `;
-
-    document.getElementById("first-input").value = user.name.first;
-    document.getElementById("last-input").value = user.name.last;
-    document.getElementById("country-input").value = user.location.country;
-
-}
-
-function fail(error){
-    apiData.innerHTML = `
-    <p>Something went wrong while fetching or parsing JSON.</p>
-    <p>Error code: ${error}</p>
-    <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status" target="_blank">View HTTP Status Codes</a></p>
-    `;
-}
+    ?>
+</body>
+</html>

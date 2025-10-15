@@ -30,12 +30,10 @@ function success(userData){
     <p>Country: ${user.location.country}</p>
     `;
 
-    apiform.innerHTML = `
-    <input type="hidden" name="first" value="${user.name.first}">
-    <input type="hidden" name="last" value="${user.name.last}">
-    <input type="hidden" name="country" value="${user.location.country}">
-    <input type="submit" id="addBtn" class="btn" value="Add This One">
-    `;
+    document.getElementById("first-input").value = user.name.first;
+    document.getElementById("last-input").value = user.name.last;
+    document.getElementById("country-input").value = user.location.country;
+
 }
 
 function fail(error){

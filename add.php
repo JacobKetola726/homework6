@@ -65,10 +65,10 @@
                 // output data of each row
                 while($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     // TODO: change the hardcoded string to actual API data, ie: firstname, etc.. 
-                    echo "<tr>"
-                    echo "<td>" . htmlspecialchars($row['first']) . "</tr>";
-                    echo "<td>" . htmlspecialchars($row['last']) . "</tr>";
-                    echo "<td>" . htmlspecialchars($row['country']) . "</tr>";
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['first']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['last']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['country']) . "</td>";
                     echo "</tr>";
                 }
                 echo "</tbody></table>";

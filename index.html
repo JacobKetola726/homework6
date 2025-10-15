@@ -8,12 +8,25 @@
     <title>Add User</title>
 </head>
 <body>
-    <h1>Add User</h1>
-    <button id="getBtn" class="btn">Get another</button>
+    <div class="container">
+        <h1>Add User</h1>
 
-    <div id="apiData">Click button to get User</div>
+        <div id="user-card">
+            <p><strong>First:</strong><span id="first">-</span></p>
+            <p><strong>Last:</strong><span id="last">-</span></p>
+            <p><strong>Country:</strong><span id="country">-</span></p>
+        </div>
+        <div class="button-group">
+            <button id="getBtn" class="btn">Get another</button>
 
-    <form id="apiForm" action="add.php" method="POST"></form>
+            <form id="apiForm" action="add.php" method="POST">
+                <input type="hidden" name="first" id="first-input">
+                <input type="hidden" name="last" id="last-input">
+                <input type="hidden" name="country" id="country-input">
+                <button type="submit" id="add-btn">Add Thid One</button>
+            </form>
+        </div>
+    </div>
 
     <script src="app.js"></script>
     
